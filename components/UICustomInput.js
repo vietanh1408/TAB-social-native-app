@@ -2,7 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, TextInput, View} from 'react-native';
 
 const UICustomInput = props => {
-  const {placeholder, isPassword = false} = props;
+  const {placeholder, isPassword = false, ...rest} = props;
 
   return (
     <View>
@@ -11,6 +11,7 @@ const UICustomInput = props => {
           style={styles.input}
           placeholder={placeholder}
           secureTextEntry={isPassword}
+          {...rest}
         />
       </SafeAreaView>
     </View>
