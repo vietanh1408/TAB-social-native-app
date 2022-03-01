@@ -33,7 +33,11 @@ const schema = Yup.object().shape({
   ),
 });
 
-const Register = () => {
+const Register = props => {
+  const {navigation, route} = props;
+
+  const {navigate, goBack} = navigation;
+
   const initialValues = {
     username: '',
     email: '',
@@ -56,7 +60,7 @@ const Register = () => {
           flexDirection: 'column',
           flex: 100,
         }}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView style={{marginBottom: 32}}>
           <View style={styles.header}>
             <View style={styles.headerWrapper}>
               <Image source={images.avatar} style={styles.avatar} />
@@ -66,7 +70,7 @@ const Register = () => {
             </View>
           </View>
           <View style={styles.body}>
-            <Text style={styles.formTitle}>ĐĂNG KÝ</Text>
+            <Text style={styles.formTitle}> ĐĂNG KÝ </Text>
             <Formik
               initialValues={initialValues}
               onSubmit={values => onSubmit(values)}
@@ -143,8 +147,10 @@ const Register = () => {
               )}
             </Formik>
             <Text style={{color: colors.black, textAlign: 'center'}}>
-              Nếu bạn đã có tài khoản? Hãy{' '}
-              <Text style={{color: colors.secondPrimary, fontWeight: 'bold'}}>
+              Nếu bạn đã có tài khoản ? Hãy{' '}
+              <Text
+                style={{color: colors.secondPrimary, fontWeight: 'bold'}}
+                onPress={() => navigate('Login')}>
                 Đăng nhập
               </Text>{' '}
               ngay

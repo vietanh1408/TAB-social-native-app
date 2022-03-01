@@ -4,7 +4,6 @@ import {
   Image,
   Keyboard,
   KeyboardAvoidingView,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -22,7 +21,11 @@ const schema = Yup.object().shape({
   password: validate.password(),
 });
 
-const Login = () => {
+const Login = props => {
+  const {navigation, route} = props;
+
+  const {navigate, goBack} = navigation;
+
   const initialValues = {
     username: '',
     password: '',
@@ -117,7 +120,9 @@ const Login = () => {
                 paddingVertical: 16,
               }}>
               Nếu bạn chưa có tài khoản? Hãy{' '}
-              <Text style={{color: colors.secondPrimary, fontWeight: 'bold'}}>
+              <Text
+                style={{color: colors.secondPrimary, fontWeight: 'bold'}}
+                onPress={() => navigate('Register')}>
                 Đăng ký
               </Text>{' '}
               ngay
