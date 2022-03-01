@@ -14,18 +14,32 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import * as Yup from 'yup';
 import {UICustomInput} from '../components/index';
 import UICustomButton from '../components/UICustomButton';
-import {colors, fontSizes, images} from '../constants/index';
+import {
+  colors,
+  fontSizes,
+  images,
+  validate as validateError,
+} from '../constants/index';
 import {validate} from '../extensions/index';
 
 const schema = Yup.object().shape({
   username: validate.username(),
-  password: validate.password(),
+  email: validate.email(),
+  phoneNumber: validate.phoneNumber(),
+  password: validate.password(6),
+  confirmPassword: validate.confirmPassword(
+    'password',
+    validateError.confirmPassword,
+  ),
 });
 
-const Login = () => {
+const Register = () => {
   const initialValues = {
     username: '',
+    email: '',
+    phoneNumber: '',
     password: '',
+    confirmPassword: '',
   };
 
   const onSubmit = values => {
@@ -36,13 +50,13 @@ const Login = () => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.keyboard}>
-      <KeyboardAwareScrollView>
-        <View
-          style={{
-            backgroundColor: 'white',
-            flexDirection: 'column',
-            flex: 100,
-          }}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'column',
+          flex: 100,
+        }}>
+        <KeyboardAwareScrollView>
           <View style={styles.header}>
             <View style={styles.headerWrapper}>
               <Image source={images.avatar} style={styles.avatar} />
@@ -52,7 +66,7 @@ const Login = () => {
             </View>
           </View>
           <View style={styles.body}>
-            <Text style={styles.formTitle}>ĐĂNG NHẬP</Text>
+            <Text style={styles.formTitle}>ĐĂNG KÝ</Text>
             <Formik
               initialValues={initialValues}
               onSubmit={values => onSubmit(values)}
@@ -69,10 +83,32 @@ const Login = () => {
                   {console.log('errors...', errors)}
                   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <UICustomInput
-                      placeholder={'Tên đăng nhập hoặc email'}
+                      placeholder={'Tên đăng nhập'}
                       fieldName="username"
                       onChangeText={handleChange('username')}
                       onBlur={handleBlur('username')}
+                      value={values}
+                      errors={errors}
+                      touched={touched}
+                    />
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <UICustomInput
+                      placeholder={'Email'}
+                      fieldName="email"
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      value={values}
+                      errors={errors}
+                      touched={touched}
+                    />
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <UICustomInput
+                      placeholder={'Số điện thoại'}
+                      fieldName="phoneNumber"
+                      onChangeText={handleChange('phoneNumber')}
+                      onBlur={handleBlur('phoneNumber')}
                       value={values}
                       errors={errors}
                       touched={touched}
@@ -90,46 +126,37 @@ const Login = () => {
                       isPassword={true}
                     />
                   </TouchableWithoutFeedback>
-                  <View style={styles.rememberWrapper}>
-                    <Text style={{color: colors.black}}>Ghi nhớ tài khoản</Text>
-                    <Text style={{color: colors.secondPrimary}}>
-                      Quên mật khẩu
-                    </Text>
-                  </View>
-                  <UICustomButton
-                    content={'ĐĂNG NHẬP'}
-                    onPress={handleSubmit}
-                  />
+                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <UICustomInput
+                      placeholder={'Nhập lại mật khẩu'}
+                      fieldName="confirmPassword"
+                      onChangeText={handleChange('confirmPassword')}
+                      onBlur={handleBlur('confirmPassword')}
+                      value={values}
+                      errors={errors}
+                      touched={touched}
+                      isPassword={true}
+                    />
+                  </TouchableWithoutFeedback>
+                  <UICustomButton content={'ĐĂNG KÝ'} onPress={handleSubmit} />
                 </View>
               )}
             </Formik>
-            <View style={styles.socialLogin}>
-              <Text style={(styles.socialItem, {color: colors.black})}>
-                Hoặc đăng nhập với
-              </Text>
-              <Image style={styles.socialItem} source={images.googleLogo} />
-              <Image style={styles.socialItem} source={images.facebookLogo} />
-            </View>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: colors.black,
-                paddingVertical: 16,
-              }}>
-              Nếu bạn chưa có tài khoản? Hãy{' '}
+            <Text style={{color: colors.black, textAlign: 'center'}}>
+              Nếu bạn đã có tài khoản? Hãy{' '}
               <Text style={{color: colors.secondPrimary, fontWeight: 'bold'}}>
-                Đăng ký
+                Đăng nhập
               </Text>{' '}
               ngay
             </Text>
           </View>
-        </View>
-      </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
-export default Login;
+export default Register;
 
 const flexColStyle = {
   flexDirection: 'column',
@@ -188,26 +215,8 @@ const styles = StyleSheet.create({
 
   form: {
     marginVertical: 16,
+    marginTop: 8,
     flex: 100,
     justifyContent: 'flex-end',
-  },
-
-  rememberWrapper: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 16,
-    marginBottom: 24,
-  },
-
-  socialLogin: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 8,
-  },
-
-  socialItem: {
-    marginHorizontal: 8,
   },
 });

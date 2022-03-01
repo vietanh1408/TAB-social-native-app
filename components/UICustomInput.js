@@ -9,40 +9,40 @@ const UICustomInput = props => {
     errors = {},
     touched = {},
     fieldName,
+    value,
     ...rest
   } = props;
 
   return (
-    <View>
-      <SafeAreaView>
-        <TextInput
-          style={
-            !!(errors[fieldName] && touched[fieldName])
-              ? styles.inputError
-              : styles.input
-          }
-          placeholder={placeholder}
-          secureTextEntry={isPassword}
-          {...rest}
-        />
-        {!!(errors[fieldName] && touched[fieldName]) && (
-          <Text style={styles.error}>{errors[fieldName]}</Text>
-        )}
-      </SafeAreaView>
-    </View>
+    <SafeAreaView>
+      <TextInput
+        style={
+          !!(errors[fieldName] && touched[fieldName])
+            ? styles.inputError
+            : styles.input
+        }
+        placeholder={placeholder}
+        secureTextEntry={isPassword}
+        value={value[fieldName]}
+        {...rest}
+      />
+      {!!(errors[fieldName] && touched[fieldName]) ? (
+        <Text style={styles.error}>{errors[fieldName]}</Text>
+      ) : (
+        <Text style={styles.error}></Text>
+      )}
+    </SafeAreaView>
   );
 };
 
 const styleInput = {
   height: 60,
-  marginHorizontal: 24,
-  marginVertical: 20,
-  borderWidth: 1,
-  borderColor: colors.black,
   padding: 20,
   borderRadius: 30,
   fontSize: 16,
   position: 'relative',
+  borderWidth: 1,
+  borderColor: 'black',
 };
 
 const styles = StyleSheet.create({
@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
   },
   error: {
     color: colors.red,
-    marginHorizontal: 32,
-    position: 'absolute',
-    bottom: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 2,
+    width: '100%',
   },
 });
 

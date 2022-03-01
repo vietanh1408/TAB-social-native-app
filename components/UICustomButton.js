@@ -15,8 +15,6 @@ export default UICustomButton;
 const styles = StyleSheet.create({
   button: {
     height: 60,
-    marginHorizontal: 24,
-    marginVertical: 16,
     backgroundColor: colors.black,
     height: 60,
     borderRadius: 30,
