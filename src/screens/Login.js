@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Formik } from 'formik';
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Image,
   Keyboard,
@@ -7,18 +8,16 @@ import {
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { UICustomInput, Loading } from '../components/index';
-import UICustomButton from '../components/UICustomButton';
+import { Loading, UICustomButton, UICustomInput } from '../components/index';
 import { colors, fontSizes, images } from '../constants/index';
 import { validate } from '../extensions/index';
 import { useAuth } from '../hooks/useAuth';
 import { fetchLogin } from '../reducers/auth/api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const schema = Yup.object().shape({
   username: validate.username(),
@@ -42,7 +41,6 @@ const Login = props => {
   const onSubmit = async (values) => {
     await dispatch(fetchLogin({ emailOrPhone: values.username, password: values.password }))
 
-
     const token = await AsyncStorage.getItem('token')
 
     if (token) {
@@ -50,12 +48,12 @@ const Login = props => {
     }
   };
 
-
   if (loading) {
     return (
       <Loading />
     )
   }
+
 
   return (
     <KeyboardAvoidingView

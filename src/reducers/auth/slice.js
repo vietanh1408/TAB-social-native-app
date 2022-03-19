@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchLogin } from "./api";
+import { fetchLogin, fetchRegister } from "./api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialState = {
@@ -20,16 +20,34 @@ const authSlice = createSlice({
         })
 
         builder.addCase(fetchLogin.fulfilled, async (state, action) => {
-            state.loading = true
+            state.loading = false
             state.token = action.payload.accessToken
-            try {
-
-                await AsyncStorage.setItem('token', action.payload.accessToken)
-
-            } catch (error) {
-                throw error
-            }
+            await AsyncStorage.setItem('token', action.payload.accessToken)
         })
+
+        builder.addCase(fetchRegister.pending, (state, action) => {
+            state.loading = true
+        })
+
+        builder.addCase(fetchRegister.rejected, (state, action) => {
+            state.loading = false
+        })
+
+        builder.addCase(fetchRegister.fulfilled, async (state, action) => {
+            state.loading = false
+            state.token = action.payload.accessToken
+            await AsyncStorage.setItem('token', action.payload.accessToken)
+        })
+
+        // builder.addMatcher(
+        //     (action) => action.type.startsWith('auth') && action.type.endsWith('pending'), 
+        //     (state) => state.loading = true
+        // )
+
+        // builder.addMatcher(
+        //     (action) => action.type.startsWith('auth') && action.type.endsWith('rejected'), 
+        //     (state) => state.loading = false
+        // )
     }
 })
 

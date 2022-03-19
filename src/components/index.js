@@ -1,5 +1,5 @@
-// import UICustomButton from './UICustomButton';
+import UICustomButton from './UICustomButton';
 import UICustomInput from './UICustomInput';
 import Loading from './Loading'
 
-export { UICustomInput, Loading };
+export { UICustomInput, Loading, UICustomButton };

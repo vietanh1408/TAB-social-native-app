@@ -1,26 +1,27 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Formik } from 'formik';
 import React from 'react';
 import {
   Image,
   Keyboard,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
+  KeyboardAvoidingView, StyleSheet,
   Text,
   TouchableWithoutFeedback,
-  View,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { UICustomInput } from '../components/index';
-import UICustomButton from '../components/UICustomButton';
+import { Loading, UICustomButton, UICustomInput } from '../components/index';
 import {
   colors,
   fontSizes,
   images,
-  validate as validateError,
+  validate as validateError
 } from '../constants/index';
 import { validate } from '../extensions/index';
+import { useAuth } from '../hooks/useAuth';
+import { fetchRegister } from '../reducers/auth/api';
 
 const schema = Yup.object().shape({
   username: validate.username(),
@@ -46,9 +47,29 @@ const Register = props => {
     confirmPassword: '',
   };
 
-  const onSubmit = values => {
-    console.log('values...', values);
+  const dispatch = useDispatch()
+
+  const { loading } = useAuth()
+
+  const onSubmit = async (values) => {
+    await dispatch(fetchRegister({
+      username: values.username,
+      email: values.email,
+      phoneNumber: values.phoneNumber,
+      password: values.password
+    }))
+    const token = await AsyncStorage.getItem('token')
+
+    if (token) {
+      navigate('Home')
+    }
   };
+
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
 
   return (
     <KeyboardAvoidingView
