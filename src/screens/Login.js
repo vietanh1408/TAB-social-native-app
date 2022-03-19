@@ -1,5 +1,5 @@
-import {Formik} from 'formik';
-import React from 'react';
+import { Formik } from 'formik';
+import React, { useEffect } from 'react';
 import {
   Image,
   Keyboard,
@@ -9,12 +9,16 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import {UICustomInput} from '../components/index';
+import { UICustomInput, Loading } from '../components/index';
 import UICustomButton from '../components/UICustomButton';
-import {colors, fontSizes, images} from '../constants/index';
-import {validate} from '../extensions/index';
+import { colors, fontSizes, images } from '../constants/index';
+import { validate } from '../extensions/index';
+import { useAuth } from '../hooks/useAuth';
+import { fetchLogin } from '../reducers/auth/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const schema = Yup.object().shape({
   username: validate.username(),
@@ -22,18 +26,36 @@ const schema = Yup.object().shape({
 });
 
 const Login = props => {
-  const {navigation, route} = props;
+  const { navigation, route } = props;
 
-  const {navigate, goBack} = navigation;
+  const { navigate, goBack } = navigation;
 
   const initialValues = {
     username: '',
     password: '',
   };
 
-  const onSubmit = values => {
-    console.log('values...', values);
+  const dispatch = useDispatch()
+
+  const { loading } = useAuth()
+
+  const onSubmit = async (values) => {
+    await dispatch(fetchLogin({ emailOrPhone: values.username, password: values.password }))
+
+
+    const token = await AsyncStorage.getItem('token')
+
+    if (token) {
+      navigate('Home')
+    }
   };
+
+
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
 
   return (
     <KeyboardAvoidingView
@@ -69,7 +91,6 @@ const Login = props => {
                 touched,
               }) => (
                 <View style={styles.form}>
-                  {console.log('errors...', errors)}
                   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <UICustomInput
                       placeholder={'Tên đăng nhập hoặc email'}
@@ -94,8 +115,8 @@ const Login = props => {
                     />
                   </TouchableWithoutFeedback>
                   <View style={styles.rememberWrapper}>
-                    <Text style={{color: colors.black}}>Ghi nhớ tài khoản</Text>
-                    <Text style={{color: colors.secondPrimary}}>
+                    <Text style={{ color: colors.black }}>Ghi nhớ tài khoản</Text>
+                    <Text style={{ color: colors.secondPrimary }}>
                       Quên mật khẩu
                     </Text>
                   </View>
@@ -107,7 +128,7 @@ const Login = props => {
               )}
             </Formik>
             <View style={styles.socialLogin}>
-              <Text style={(styles.socialItem, {color: colors.black})}>
+              <Text style={(styles.socialItem, { color: colors.black })}>
                 Hoặc đăng nhập với
               </Text>
               <Image style={styles.socialItem} source={images.googleLogo} />
@@ -121,7 +142,7 @@ const Login = props => {
               }}>
               Nếu bạn chưa có tài khoản? Hãy{' '}
               <Text
-                style={{color: colors.secondPrimary, fontWeight: 'bold'}}
+                style={{ color: colors.secondPrimary, fontWeight: 'bold' }}
                 onPress={() => navigate('Register')}>
                 Đăng ký
               </Text>{' '}

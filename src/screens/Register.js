@@ -1,4 +1,4 @@
-import {Formik} from 'formik';
+import { Formik } from 'formik';
 import React from 'react';
 import {
   Image,
@@ -10,9 +10,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as Yup from 'yup';
-import {UICustomInput} from '../components/index';
+import { UICustomInput } from '../components/index';
 import UICustomButton from '../components/UICustomButton';
 import {
   colors,
@@ -20,7 +20,7 @@ import {
   images,
   validate as validateError,
 } from '../constants/index';
-import {validate} from '../extensions/index';
+import { validate } from '../extensions/index';
 
 const schema = Yup.object().shape({
   username: validate.username(),
@@ -34,9 +34,9 @@ const schema = Yup.object().shape({
 });
 
 const Register = props => {
-  const {navigation, route} = props;
+  const { navigation, route } = props;
 
-  const {navigate, goBack} = navigation;
+  const { navigate, goBack } = navigation;
 
   const initialValues = {
     username: '',
@@ -60,7 +60,7 @@ const Register = props => {
           flexDirection: 'column',
           flex: 100,
         }}>
-        <KeyboardAwareScrollView style={{marginBottom: 32}}>
+        <KeyboardAwareScrollView style={{ marginBottom: 16 }}>
           <View style={styles.header}>
             <View style={styles.headerWrapper}>
               <Image source={images.avatar} style={styles.avatar} />
@@ -84,7 +84,6 @@ const Register = props => {
                 touched,
               }) => (
                 <View style={styles.form}>
-                  {console.log('errors...', errors)}
                   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <UICustomInput
                       placeholder={'Tên đăng nhập'}
@@ -146,10 +145,10 @@ const Register = props => {
                 </View>
               )}
             </Formik>
-            <Text style={{color: colors.black, textAlign: 'center'}}>
+            <Text style={{ color: colors.black, textAlign: 'center' }}>
               Nếu bạn đã có tài khoản ? Hãy{' '}
               <Text
-                style={{color: colors.secondPrimary, fontWeight: 'bold'}}
+                style={{ color: colors.secondPrimary, fontWeight: 'bold' }}
                 onPress={() => navigate('Login')}>
                 Đăng nhập
               </Text>{' '}
